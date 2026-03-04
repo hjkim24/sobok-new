@@ -93,6 +93,14 @@ runcmd:
   - mkdir -p /opt/sobok/releases /opt/sobok/current
   - "chown sobok:sobok /opt/sobok/.env 2>/dev/null || true"
 
+  # --- Allow opc and sobok to restart sobok service without password ---
+  - |
+    cat > /etc/sudoers.d/sobok << 'SUDOERS'
+    opc ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart sobok, /usr/bin/systemctl stop sobok, /usr/bin/systemctl start sobok
+    sobok ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart sobok, /usr/bin/systemctl stop sobok, /usr/bin/systemctl start sobok
+    SUDOERS
+  - chmod 440 /etc/sudoers.d/sobok
+
   # --- Deploy script ---
   - |
     cat > /opt/sobok/deploy.sh << 'DEPLOY'
