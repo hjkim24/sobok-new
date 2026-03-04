@@ -1,0 +1,20 @@
+meta {
+  name: 포인트 내역 조회
+  type: http
+  seq: 14
+}
+
+get {
+  url: {{base}}/user/point/log?startDate=2025-01-01&endDate=2025-01-31
+  body: none
+  auth: inherit
+}
+
+params:query {
+  startDate: 2025-01-01
+  endDate: 2025-01-31
+}
+
+settings {
+  encodeUrl: true
+}

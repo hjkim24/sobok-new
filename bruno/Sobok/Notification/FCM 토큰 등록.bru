@@ -1,0 +1,19 @@
+meta {
+  name: FCM 토큰 등록
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base}}/fcm/register?fcmToken=your_fcm_token_here
+  body: none
+  auth: inherit
+}
+
+params:query {
+  fcmToken: your_fcm_token_here
+}
+
+settings {
+  encodeUrl: true
+}

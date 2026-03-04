@@ -1,0 +1,19 @@
+meta {
+  name: 루틴별 이번주 통계
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{base}}/statistics/routine/count?routineId=1
+  body: none
+  auth: inherit
+}
+
+params:query {
+  routineId: 1
+}
+
+settings {
+  encodeUrl: true
+}

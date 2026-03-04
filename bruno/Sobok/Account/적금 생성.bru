@@ -1,0 +1,23 @@
+meta {
+  name: 적금 생성
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base}}/account
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "title": "테스트 적금",
+    "targetAmount": 100000,
+    "durationMonths": 12
+  }
+}
+
+settings {
+  encodeUrl: true
+}

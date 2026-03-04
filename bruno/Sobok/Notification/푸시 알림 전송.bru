@@ -1,0 +1,22 @@
+meta {
+  name: 푸시 알림 전송
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{base}}/fcm/send
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "title": "알림 제목",
+    "body": "알림 내용입니다."
+  }
+}
+
+settings {
+  encodeUrl: true
+}

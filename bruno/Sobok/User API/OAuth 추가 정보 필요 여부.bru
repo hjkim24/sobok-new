@@ -1,0 +1,15 @@
+meta {
+  name: OAuth 추가 정보 필요 여부
+  type: http
+  seq: 21
+}
+
+get {
+  url: {{base}}/user/oauth/needs-additional-info
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

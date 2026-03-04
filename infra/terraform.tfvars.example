@@ -1,0 +1,28 @@
+# OCI Authentication
+tenancy_ocid     = "ocid1.tenancy.oc1..xxxx"
+user_ocid        = "ocid1.user.oc1..xxxx"
+fingerprint      = "aa:bb:cc:dd:ee:ff:00:11:22:33:44:55:66:77:88:99"
+private_key_path = "~/.oci/oci_api_key.pem"
+
+# Optional: defaults to tenancy root
+# compartment_ocid = "ocid1.compartment.oc1..xxxx"
+
+# Region (default: ap-chuncheon-1)
+# region = "ap-chuncheon-1"
+
+# SSH public key (paste the full key)
+ssh_public_key = "ssh-ed25519 AAAA... user@host"
+
+# Domain & SSL
+domain        = "api.sobok.example.com"
+certbot_email = "admin@example.com"
+
+# AWS (Route 53 DNS)
+aws_access_key      = "AKIA..."
+aws_secret_key      = "xxxx..."
+aws_route53_zone_id = "Z0123456789ABCDEF"
+
+# Instance sizing (Always Free defaults)
+# instance_ocpus     = 2
+# instance_memory_gb = 12
+# boot_volume_gb     = 50

@@ -1,0 +1,27 @@
+meta {
+  name: 루틴 생성
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base}}/routine
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "accountId": 1,
+    "title": "아침 루틴",
+    "days": ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY"],
+    "startTime": "07:00",
+    "endTime": "07:30",
+    "duration": 30,
+    "linkApp": "유튜브"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

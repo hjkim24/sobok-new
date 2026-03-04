@@ -1,0 +1,19 @@
+meta {
+  name: 월별 눈카드 조회
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base}}/snowcard?yearMonth=2025-01
+  body: none
+  auth: inherit
+}
+
+params:query {
+  yearMonth: 2025-01
+}
+
+settings {
+  encodeUrl: true
+}

@@ -1,0 +1,15 @@
+meta {
+  name: 루틴 일시정지 토글
+  type: http
+  seq: 6
+}
+
+put {
+  url: {{base}}/routine/1/suspend
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

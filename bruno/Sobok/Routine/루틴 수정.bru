@@ -1,0 +1,25 @@
+meta {
+  name: 루틴 수정
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{base}}/routine/1
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "title": "수정된 루틴",
+    "days": ["MONDAY", "WEDNESDAY", "FRIDAY"],
+    "startTime": "08:00",
+    "endTime": "08:30",
+    "duration": 30
+  }
+}
+
+settings {
+  encodeUrl: true
+}

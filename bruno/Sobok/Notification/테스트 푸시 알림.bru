@@ -1,0 +1,23 @@
+meta {
+  name: 테스트 푸시 알림
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base}}/fcm/send/test
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "token": "your_device_fcm_token_here",
+    "title": "알림 테스트",
+    "body": "알림 테스트예요"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

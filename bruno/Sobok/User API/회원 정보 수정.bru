@@ -1,0 +1,23 @@
+meta {
+  name: 회원 정보 수정
+  type: http
+  seq: 10
+}
+
+put {
+  url: {{base}}/user/update/general
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "email": "updated@sobok.com",
+    "phoneNumber": "01099999999",
+    "birth": "20030204"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

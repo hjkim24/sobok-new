@@ -1,0 +1,22 @@
+meta {
+  name: 비밀번호 수정
+  type: http
+  seq: 11
+}
+
+put {
+  url: {{base}}/user/update/password
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "currentPassword": "1q2w3e4r",
+    "newPassword": "newpassword123"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

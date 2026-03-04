@@ -1,0 +1,19 @@
+meta {
+  name: 월간 리포트
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base}}/report?yearMonth=2025-01
+  body: none
+  auth: inherit
+}
+
+params:query {
+  yearMonth: 2025-01
+}
+
+settings {
+  encodeUrl: true
+}

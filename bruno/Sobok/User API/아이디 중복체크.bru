@@ -1,0 +1,19 @@
+meta {
+  name: 아이디 중복체크
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{base}}/user/is-duplicated/username?username=testuser
+  body: none
+  auth: none
+}
+
+params:query {
+  username: testuser
+}
+
+settings {
+  encodeUrl: true
+}

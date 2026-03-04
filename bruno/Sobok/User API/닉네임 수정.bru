@@ -1,0 +1,19 @@
+meta {
+  name: 닉네임 수정
+  type: http
+  seq: 12
+}
+
+put {
+  url: {{base}}/user/update/display-name?displayName=새닉네임
+  body: none
+  auth: inherit
+}
+
+params:query {
+  displayName: 새닉네임
+}
+
+settings {
+  encodeUrl: true
+}

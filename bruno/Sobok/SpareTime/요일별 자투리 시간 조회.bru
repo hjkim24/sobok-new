@@ -1,0 +1,19 @@
+meta {
+  name: 요일별 자투리 시간 조회
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base}}/spare-time/by-day?day=MONDAY
+  body: none
+  auth: inherit
+}
+
+params:query {
+  day: MONDAY
+}
+
+settings {
+  encodeUrl: true
+}

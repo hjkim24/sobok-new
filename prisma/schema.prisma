@@ -1,0 +1,420 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum DayOfWeek {
+  MON
+  TUE
+  WED
+  THU
+  FRI
+  SAT
+  SUN
+}
+
+// ───────────────────────────────────────────────
+// Member (회원)
+// ───────────────────────────────────────────────
+model Member {
+  id                      Int       @id @default(autoincrement())
+  username                String?
+  password                String?
+  name                    String?
+  displayName             String?   @map("display_name")
+  email                   String?
+  phoneNumber             String?   @map("phone_number")
+  birth                   String?
+  point                   Int       @default(0)
+  createdAt               DateTime? @map("created_at")
+  isOauth                 Boolean?  @map("is_oauth")
+  isPremium               Boolean   @default(false) @map("is_premium")
+  consecutiveAchieveCount Int       @default(0) @map("consecutive_achieve_count")
+  premiumPrice            Int       @default(9999) @map("premium_price")
+  totalAchievedTime       Int       @default(0) @map("total_achieved_time")
+  totalAccountBalance     Int       @default(0) @map("total_account_balance")
+  weeklyRoutineTime       Int       @default(0) @map("weekly_routine_time")
+
+  accounts       Account[]
+  memberLinkApps MemberLinkApp[]
+  oauthAccounts  OauthAccount[]
+  routines       Routine[]
+  spareTimes     SpareTime[]
+  categories     Category[]
+  dailyAchieves  DailyAchieve[]
+  fcmTokens      FcmToken[]
+  pointLogs      PointLog[]
+  premiums       Premium[]
+  monthlyReports MonthlyUserReport[]
+  snowCards      SnowCard[]
+  survey         Survey?
+  refreshTokens  RefreshToken[]
+
+  @@map("member")
+}
+
+// ───────────────────────────────────────────────
+// MemberLinkApp (회원 연동 앱)
+// ───────────────────────────────────────────────
+model MemberLinkApp {
+  id       Int     @id @default(autoincrement())
+  linkApp  String? @map("link_app")
+  memberId Int     @map("member_id")
+
+  member Member @relation(fields: [memberId], references: [id])
+
+  @@index([memberId])
+  @@map("member_link_app")
+}
+
+// ───────────────────────────────────────────────
+// OauthAccount (소셜 로그인 계정)
+// ───────────────────────────────────────────────
+model OauthAccount {
+  id        Int       @id @default(autoincrement())
+  oauthId   String?   @map("oauth_id")
+  provider  String?
+  createdAt DateTime? @map("created_at")
+  memberId  Int       @map("member_id")
+
+  member Member @relation(fields: [memberId], references: [id])
+
+  @@index([memberId])
+  @@map("oauth_account")
+}
+
+// ───────────────────────────────────────────────
+// Account (적금 계좌)
+// ───────────────────────────────────────────────
+model Account {
+  id              Int       @id @default(autoincrement())
+  title           String?
+  balance         Int       @default(0)
+  time            Int?
+  duration        Int?
+  isExpired       Boolean   @default(false) @map("is_expired")
+  isEnded         Boolean   @default(false) @map("is_ended")
+  isExtended      Boolean   @default(false) @map("is_extended")
+  isValid         Boolean   @default(false) @map("is_valid")
+  interest        Float?
+  interestBalance BigInt    @default(0) @map("interest_balance")
+  createdAt       DateTime? @map("created_at") @db.Date
+  expiredAt       DateTime? @map("expired_at") @db.Date
+  updatedAt       DateTime? @map("updated_at")
+  memberId Int @map("member_id")
+
+  member       Member        @relation(fields: [memberId], references: [id])
+  routines     Routine[]
+  accountLogs  AccountLog[]
+  interestLogs InterestLog[]
+
+  @@index([memberId])
+  @@map("account")
+}
+
+// ───────────────────────────────────────────────
+// AccountLog (계좌 입금 로그)
+// ───────────────────────────────────────────────
+model AccountLog {
+  id          Int      @id @default(autoincrement())
+  depositTime Int?     @map("deposit_time")
+  balance     Int?
+  createdAt   DateTime @default(now()) @map("created_at")
+  accountId   Int      @map("account_id")
+
+  account Account @relation(fields: [accountId], references: [id])
+
+  @@index([accountId])
+  @@map("account_log")
+}
+
+// ───────────────────────────────────────────────
+// InterestLog (이자 계산 로그)
+// ───────────────────────────────────────────────
+model InterestLog {
+  id              Int     @id @default(autoincrement())
+  targetYearMonth String? @map("target_year_month")
+  interest        Int?
+  accountId       Int     @map("account_id")
+
+  account Account @relation(fields: [accountId], references: [id])
+
+  @@index([accountId])
+  @@map("interest_log")
+}
+
+// ───────────────────────────────────────────────
+// Routine (루틴)
+// ───────────────────────────────────────────────
+model Routine {
+  id          Int       @id @default(autoincrement())
+  title       String?
+  startTime   DateTime? @map("start_time") @db.Time(6)
+  endTime     DateTime? @map("end_time") @db.Time(6)
+  duration    BigInt?
+  linkApp     String?   @map("link_app")
+  createdAt   DateTime? @map("created_at")
+  isSuspended Boolean   @default(false) @map("is_suspended")
+  isAchieved  Boolean   @default(false) @map("is_achieved")
+  isCompleted Boolean   @default(false) @map("is_completed")
+  isEnded     Boolean   @default(false) @map("is_ended")
+  isAiRoutine Boolean?  @map("is_ai_routine")
+  memberId Int   @map("member_id")
+  accountId Int? @map("account_id")
+
+  member      Member       @relation(fields: [memberId], references: [id])
+  account     Account?     @relation(fields: [accountId], references: [id])
+  routineLogs RoutineLog[]
+  routineDays RoutineDay[]
+
+  @@index([memberId])
+  @@index([accountId])
+  @@map("routine")
+}
+
+// ───────────────────────────────────────────────
+// RoutineDay (루틴 요일)
+// ───────────────────────────────────────────────
+model RoutineDay {
+  id        Int       @id @default(autoincrement())
+  day       DayOfWeek
+  routineId Int       @map("routine_id")
+
+  routine Routine @relation(fields: [routineId], references: [id])
+
+  @@index([routineId])
+  @@map("routine_day")
+}
+
+// ───────────────────────────────────────────────
+// RoutineLog (루틴 실행 로그)
+// ───────────────────────────────────────────────
+model RoutineLog {
+  id          Int       @id @default(autoincrement())
+  startTime   DateTime? @map("start_time")
+  endTime     DateTime? @map("end_time")
+  duration    BigInt?
+  isCompleted Boolean?  @map("is_completed")
+  routineId   Int       @map("routine_id")
+
+  routine Routine @relation(fields: [routineId], references: [id])
+
+  @@index([routineId])
+  @@map("routine_log")
+}
+
+// ───────────────────────────────────────────────
+// SpareTime (여유 시간)
+// ───────────────────────────────────────────────
+model SpareTime {
+  id        Int     @id @default(autoincrement())
+  title     String?
+  startTime String? @map("start_time")
+  endTime   String? @map("end_time")
+  duration  BigInt?
+  memberId  Int   @map("member_id")
+
+  member        Member        @relation(fields: [memberId], references: [id])
+  spareTimeDays SpareTimeDay[]
+
+  @@index([memberId])
+  @@map("spare_time")
+}
+
+// ───────────────────────────────────────────────
+// SpareTimeDay (여유 시간 요일)
+// ───────────────────────────────────────────────
+model SpareTimeDay {
+  id          Int       @id @default(autoincrement())
+  day         DayOfWeek
+  spareTimeId Int       @map("spare_time_id")
+
+  spareTime SpareTime @relation(fields: [spareTimeId], references: [id])
+
+  @@index([spareTimeId])
+  @@map("spare_time_day")
+}
+
+// ───────────────────────────────────────────────
+// Survey (설문)
+// ───────────────────────────────────────────────
+model Survey {
+  id           Int     @id @default(autoincrement())
+  spareTpo     String? @map("spare_tpo")
+  preference1  String?
+  preference2  String?
+  preference3  String?
+  extraRequest String? @map("extra_request")
+  memberId     Int     @unique @map("member_id")
+
+  member            Member             @relation(fields: [memberId], references: [id])
+  surveyLikeOptions SurveyLikeOption[]
+  surveySpareTimes  SurveySpareTime[]
+
+  @@map("survey")
+}
+
+// ───────────────────────────────────────────────
+// SurveyLikeOption (설문 선호 옵션)
+// ───────────────────────────────────────────────
+model SurveyLikeOption {
+  id         Int     @id @default(autoincrement())
+  likeOption String? @map("like_option")
+  surveyId   Int     @map("survey_id")
+
+  survey Survey @relation(fields: [surveyId], references: [id])
+
+  @@index([surveyId])
+  @@map("survey_like_option")
+}
+
+// ───────────────────────────────────────────────
+// SurveySpareTime (설문 여유 시간)
+// ───────────────────────────────────────────────
+model SurveySpareTime {
+  id        Int     @id @default(autoincrement())
+  spareTime String? @map("spare_time")
+  surveyId  Int     @map("survey_id")
+
+  survey Survey @relation(fields: [surveyId], references: [id])
+
+  @@index([surveyId])
+  @@map("survey_spare_time")
+}
+
+// ───────────────────────────────────────────────
+// Category (할 일 카테고리)
+// ───────────────────────────────────────────────
+model Category {
+  id        Int       @id @default(autoincrement())
+  category  String?
+  createdAt DateTime? @map("created_at")
+  memberId  Int       @map("member_id")
+
+  member Member @relation(fields: [memberId], references: [id])
+
+  @@index([memberId])
+  @@map("category")
+}
+
+// ───────────────────────────────────────────────
+// DailyAchieve (일일 달성 현황)
+// ───────────────────────────────────────────────
+model DailyAchieve {
+  id       Int       @id @default(autoincrement())
+  date     DateTime? @db.Date
+  status   String?
+  memberId Int       @map("member_id")
+
+  member Member @relation(fields: [memberId], references: [id])
+
+  @@index([memberId])
+  @@index([memberId, date])
+  @@map("daily_achieve")
+}
+
+// ───────────────────────────────────────────────
+// FcmToken (FCM 푸시 알림 토큰)
+// ───────────────────────────────────────────────
+model FcmToken {
+  id        Int       @id @default(autoincrement())
+  fcmToken  String?   @map("fcm_token")
+  active    Boolean?
+  createdAt DateTime? @map("created_at")
+  updatedAt DateTime? @map("updated_at")
+  memberId  Int       @map("member_id")
+
+  member Member @relation(fields: [memberId], references: [id])
+
+  @@index([memberId])
+  @@map("fcm_token")
+}
+
+// ───────────────────────────────────────────────
+// PointLog (포인트 내역)
+// ───────────────────────────────────────────────
+model PointLog {
+  id          Int      @id @default(autoincrement())
+  point       Int?
+  balance     Int?
+  category    String?
+  description String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  memberId    Int      @map("member_id")
+
+  member Member @relation(fields: [memberId], references: [id])
+
+  @@index([memberId])
+  @@index([memberId, createdAt])
+  @@map("point_log")
+}
+
+// ───────────────────────────────────────────────
+// Premium (프리미엄 구독 기간)
+// ───────────────────────────────────────────────
+model Premium {
+  id       Int       @id @default(autoincrement())
+  startAt  DateTime? @map("start_at") @db.Date
+  endAt    DateTime? @map("end_at") @db.Date
+  memberId Int       @map("member_id")
+
+  member Member @relation(fields: [memberId], references: [id])
+
+  @@index([memberId])
+  @@map("premium")
+}
+
+// ───────────────────────────────────────────────
+// MonthlyUserReport (월간 통계 리포트)
+// ───────────────────────────────────────────────
+model MonthlyUserReport {
+  id                     Int     @id @default(autoincrement())
+  targetYearMonth        String? @map("target_year_month")
+  totalAccumulatedTime   BigInt? @map("total_accumulated_time")
+  averageAccumulatedTime BigInt? @map("average_accumulated_time")
+  memberId               Int     @map("member_id")
+
+  member Member @relation(fields: [memberId], references: [id])
+
+  @@index([memberId])
+  @@map("monthly_user_report")
+}
+
+// ───────────────────────────────────────────────
+// SnowCard (스노우카드 리포트)
+// ───────────────────────────────────────────────
+model SnowCard {
+  id              Int     @id @default(autoincrement())
+  targetYearMonth String? @map("target_year_month")
+  snowCard        String? @map("snow_card") //TODO: snowCard enum 생성
+  memberId        Int     @map("member_id")
+
+  member Member @relation(fields: [memberId], references: [id])
+
+  @@index([memberId])
+  @@map("snow_card")
+}
+
+// ───────────────────────────────────────────────
+// RefreshToken (JWT 리프레시 토큰)
+// ───────────────────────────────────────────────
+model RefreshToken {
+  id           Int       @id @default(autoincrement())
+  username     String?
+  refreshToken String?   @map("refresh_token")
+  expiredAt    DateTime? @map("expired_at")
+  memberId     Int       @map("member_id")
+
+  member Member @relation(fields: [memberId], references: [id])
+
+  @@index([memberId])
+  @@map("refresh_token")
+}

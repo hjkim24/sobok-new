@@ -1,0 +1,21 @@
+meta {
+  name: 연동 앱 등록
+  type: http
+  seq: 18
+}
+
+post {
+  url: {{base}}/user/link-app
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "linkApps": ["유튜브", "넷플릭스"]
+  }
+}
+
+settings {
+  encodeUrl: true
+}

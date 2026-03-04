@@ -1,0 +1,15 @@
+meta {
+  name: 적금 입금 로그
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{base}}/account/1/logs
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

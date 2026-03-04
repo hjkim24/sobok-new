@@ -1,0 +1,21 @@
+meta {
+  name: 루틴 달성
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{base}}/routine/1/achieve
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "achievedDuration": 30
+  }
+}
+
+settings {
+  encodeUrl: true
+}

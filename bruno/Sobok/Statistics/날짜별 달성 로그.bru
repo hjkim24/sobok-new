@@ -1,0 +1,19 @@
+meta {
+  name: 날짜별 달성 로그
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{base}}/statistics/date/log?date=2025-01-15
+  body: none
+  auth: inherit
+}
+
+params:query {
+  date: 2025-01-15
+}
+
+settings {
+  encodeUrl: true
+}

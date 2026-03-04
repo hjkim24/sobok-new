@@ -1,0 +1,15 @@
+meta {
+  name: 설문 결과 조회
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{base}}/survey/result
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

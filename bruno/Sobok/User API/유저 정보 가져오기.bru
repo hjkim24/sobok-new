@@ -1,0 +1,15 @@
+meta {
+  name: 유저 정보 가져오기
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{base}}/user/info
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

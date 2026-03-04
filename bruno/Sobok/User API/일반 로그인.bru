@@ -1,0 +1,48 @@
+meta {
+  name: 일반 로그인
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{base}}/user/login/jwt
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "username": "testuser",
+    "password": "1q2w3e4r"
+  }
+}
+
+script:post-response {
+  test("Response status code is 200", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("Response time is within an acceptable range", function () {
+    expect(res.getResponseTime()).to.be.below(500);
+  });
+
+  test("Response has the required fields - accessToken", function () {
+    const responseData = res.getBody();
+    expect(responseData).to.be.an('object');
+    expect(responseData.accessToken).to.exist;
+  });
+
+  test("AccessToken is a non-empty string", function () {
+    const responseData = res.getBody();
+    expect(responseData.accessToken).to.be.a('string').and.to.have.lengthOf.at.least(1, "AccessToken should not be empty");
+  });
+
+  test("Get AccessToken and store it in environment variable", function () {
+    let jsonData = res.getBody();
+    bru.setEnvVar("accessToken", jsonData.accessToken);
+  });
+}
+
+settings {
+  encodeUrl: true
+}

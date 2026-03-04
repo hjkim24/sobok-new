@@ -1,0 +1,19 @@
+meta {
+  name: 닉네임 중복체크
+  type: http
+  seq: 9
+}
+
+get {
+  url: {{base}}/user/is-duplicated/display-name?displayName=테스트닉네임
+  body: none
+  auth: none
+}
+
+params:query {
+  displayName: 테스트닉네임
+}
+
+settings {
+  encodeUrl: true
+}

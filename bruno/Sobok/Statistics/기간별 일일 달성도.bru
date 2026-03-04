@@ -1,0 +1,20 @@
+meta {
+  name: 기간별 일일 달성도
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base}}/statistics/date?startDate=2025-01-01&endDate=2025-01-31
+  body: none
+  auth: inherit
+}
+
+params:query {
+  startDate: 2025-01-01
+  endDate: 2025-01-31
+}
+
+settings {
+  encodeUrl: true
+}

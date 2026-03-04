@@ -1,0 +1,19 @@
+meta {
+  name: 적금 연장
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{base}}/account/1/extend?days=30
+  body: none
+  auth: inherit
+}
+
+params:query {
+  days: 30
+}
+
+settings {
+  encodeUrl: true
+}

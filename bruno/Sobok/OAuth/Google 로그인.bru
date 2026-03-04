@@ -1,0 +1,21 @@
+meta {
+  name: Google 로그인
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base}}/api/auth/google/native
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "idToken": "your_google_id_token_here"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

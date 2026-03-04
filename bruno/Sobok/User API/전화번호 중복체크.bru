@@ -1,0 +1,19 @@
+meta {
+  name: 전화번호 중복체크
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{base}}/user/is-duplicated/phone-number?phoneNumber=01012345678
+  body: none
+  auth: none
+}
+
+params:query {
+  phoneNumber: 01012345678
+}
+
+settings {
+  encodeUrl: true
+}

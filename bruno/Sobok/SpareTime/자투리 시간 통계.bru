@@ -1,0 +1,15 @@
+meta {
+  name: 자투리 시간 통계
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{base}}/spare-time/duration
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

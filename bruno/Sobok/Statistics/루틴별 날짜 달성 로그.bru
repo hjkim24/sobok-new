@@ -1,0 +1,20 @@
+meta {
+  name: 루틴별 날짜 달성 로그
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{base}}/statistics/routine/log?routineId=1&date=2025-01-15
+  body: none
+  auth: inherit
+}
+
+params:query {
+  routineId: 1
+  date: 2025-01-15
+}
+
+settings {
+  encodeUrl: true
+}

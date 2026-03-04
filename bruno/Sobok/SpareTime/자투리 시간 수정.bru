@@ -1,0 +1,24 @@
+meta {
+  name: 자투리 시간 수정
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{base}}/spare-time
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "id": 1,
+    "day": "MONDAY",
+    "startTime": "07:00",
+    "endTime": "09:00"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

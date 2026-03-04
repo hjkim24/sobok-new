@@ -1,0 +1,21 @@
+meta {
+  name: 카테고리 생성
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{base}}/category
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "category": "운동"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

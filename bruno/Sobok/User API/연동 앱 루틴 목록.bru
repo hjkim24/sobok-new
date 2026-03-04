@@ -1,0 +1,19 @@
+meta {
+  name: 연동 앱 루틴 목록
+  type: http
+  seq: 20
+}
+
+get {
+  url: {{base}}/user/link-app/routines?linkApp=유튜브
+  body: none
+  auth: inherit
+}
+
+params:query {
+  linkApp: 유튜브
+}
+
+settings {
+  encodeUrl: true
+}

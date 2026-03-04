@@ -1,0 +1,19 @@
+meta {
+  name: 이메일 중복체크
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{base}}/user/is-duplicated/email?email=test@sobok.com
+  body: none
+  auth: none
+}
+
+params:query {
+  email: test@sobok.com
+}
+
+settings {
+  encodeUrl: true
+}

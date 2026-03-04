@@ -1,0 +1,21 @@
+meta {
+  name: Kakao 로그인
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{base}}/api/auth/kakao/native
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "accessToken": "your_kakao_access_token_here"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

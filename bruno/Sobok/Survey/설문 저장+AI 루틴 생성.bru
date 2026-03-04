@@ -1,0 +1,25 @@
+meta {
+  name: 설문 저장+AI 루틴 생성
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base}}/survey/generate
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "spareTime": ["06:00-08:00", "18:00-20:00"],
+    "preference1": "여러 가지를 다양하게",
+    "preference2": "느슨하고 여유로운",
+    "preference3": "오래오래 집중하기",
+    "likeOption": ["영어공부", "독서"]
+  }
+}
+
+settings {
+  encodeUrl: true
+}
