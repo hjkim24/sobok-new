@@ -30,10 +30,13 @@ jobs:
       - name: Create tarball
         run: tar -czf sobok.tar.gz dist package.json pnpm-lock.yaml prisma
 
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "~1.5"
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
       - name: Get server IP from Terraform Cloud
         id: tf_output
-        env:
-          TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
         run: |
           cd infra
           terraform init -input=false
