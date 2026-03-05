@@ -1,6 +1,13 @@
 terraform {
   required_version = ">= 1.5"
 
+  cloud {
+    organization = "sobok"
+    workspaces {
+      name = "sobok"
+    }
+  }
+
   required_providers {
     oci = {
       source  = "oracle/oci"
