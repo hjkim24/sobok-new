@@ -85,8 +85,10 @@ resource "null_resource" "provision_env" {
       "sudo mkdir -p /opt/sobok",
       "sudo mv /tmp/.env /opt/sobok/.env",
       "sudo chmod 600 /opt/sobok/.env",
-      "# chown will be applied after cloud-init creates the sobok user",
-      "sudo chown root:root /opt/sobok/.env",
+      "# Wait for cloud-init to create the sobok user (up to 5 min)",
+      "for i in $(seq 1 60); do id sobok &>/dev/null && break; sleep 5; done",
+      "sudo chown sobok:sobok /opt/sobok/.env",
+      "sudo restorecon -Rv /opt/sobok/",
     ]
   }
 }

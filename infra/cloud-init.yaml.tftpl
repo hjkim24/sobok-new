@@ -74,15 +74,10 @@ runcmd:
     User=sobok
     Group=sobok
     WorkingDirectory=/opt/sobok/current
-    EnvironmentFile=/opt/sobok/.env
+    EnvironmentFile=-/opt/sobok/.env
     ExecStart=/usr/bin/node dist/main
     Restart=always
     RestartSec=5
-    NoNewPrivileges=true
-    ProtectSystem=strict
-    ProtectHome=true
-    ReadWritePaths=/opt/sobok
-    PrivateTmp=true
 
     [Install]
     WantedBy=multi-user.target
@@ -90,7 +85,7 @@ runcmd:
 
   # --- App user & directories ---
   - useradd -r -s /usr/sbin/nologin -d /opt/sobok sobok
-  - mkdir -p /opt/sobok/releases /opt/sobok/current
+  - mkdir -p /opt/sobok/releases
   - "chown sobok:sobok /opt/sobok/.env 2>/dev/null || true"
 
   # --- Allow opc and sobok to restart sobok service without password ---
