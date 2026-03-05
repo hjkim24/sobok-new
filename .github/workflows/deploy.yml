@@ -38,7 +38,15 @@ jobs:
           mkdir -p ~/.ssh
           printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -H "$SERVER_IP" >> ~/.ssh/known_hosts
 
-          scp -o StrictHostKeyChecking=no sobok.tar.gz "opc@${SERVER_IP}:/tmp/sobok.tar.gz"
-          ssh -o StrictHostKeyChecking=no "opc@${SERVER_IP}" "sudo -u sobok /opt/sobok/deploy.sh /tmp/sobok.tar.gz"
+          echo "=== ssh-keyscan ==="
+          ssh-keyscan -H "$SERVER_IP" >> ~/.ssh/known_hosts
+          echo "=== keyscan exit: $? ==="
+
+          echo "=== scp ==="
+          scp -v -o StrictHostKeyChecking=no sobok.tar.gz "opc@${SERVER_IP}:/tmp/sobok.tar.gz"
+          echo "=== scp exit: $? ==="
+
+          echo "=== ssh deploy ==="
+          ssh -v -o StrictHostKeyChecking=no "opc@${SERVER_IP}" "sudo -u sobok /opt/sobok/deploy.sh /tmp/sobok.tar.gz"
+          echo "=== ssh exit: $? ==="
