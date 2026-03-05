@@ -67,16 +67,14 @@ export class SmsService {
     if (!stored) return false;
 
     const isValid = stored === code;
-    if (isValid) {
-      // 검증 성공 후 코드 삭제
-      await this.redis.del(`sms:${phoneNumber}`);
-    }
+    // 성공/실패 모두 즉시 삭제하여 brute-force 방지
+    await this.redis.del(`sms:${phoneNumber}`);
     return isValid;
   }
 
   // ─── 헬퍼 ─────────────────────────────────────────────────────────────────────
 
   private generateCode(): string {
-    return String(Math.floor(Math.random() * 1_000_000)).padStart(6, '0');
+    return String(require('crypto').randomInt(0, 1_000_000)).padStart(6, '0');
   }
 }
