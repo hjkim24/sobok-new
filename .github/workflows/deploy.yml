@@ -30,23 +30,24 @@ jobs:
       - name: Create tarball
         run: tar -czf sobok.tar.gz dist package.json pnpm-lock.yaml prisma
 
+      - name: Get server IP from Terraform Cloud
+        id: tf_output
+        env:
+          TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
+        run: |
+          cd infra
+          terraform init -input=false
+          SERVER_IP=$(terraform output -raw public_ip)
+          echo "server_ip=$SERVER_IP" >> $GITHUB_OUTPUT
+
       - name: Deploy to server
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          SERVER_IP: ${{ secrets.SERVER_IP }}
+          SERVER_IP: ${{ steps.tf_output.outputs.server_ip }}
         run: |
           mkdir -p ~/.ssh
           printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
 
-          echo "=== ssh-keyscan ==="
-          ssh-keyscan -H "$SERVER_IP" >> ~/.ssh/known_hosts
-          echo "=== keyscan exit: $? ==="
-
-          echo "=== scp ==="
-          scp -v -o StrictHostKeyChecking=no sobok.tar.gz "opc@${SERVER_IP}:/tmp/sobok.tar.gz"
-          echo "=== scp exit: $? ==="
-
-          echo "=== ssh deploy ==="
-          ssh -v -o StrictHostKeyChecking=no "opc@${SERVER_IP}" "sudo -u sobok /opt/sobok/deploy.sh /tmp/sobok.tar.gz"
-          echo "=== ssh exit: $? ==="
+          scp -o StrictHostKeyChecking=no sobok.tar.gz "opc@${SERVER_IP}:/tmp/sobok.tar.gz"
+          ssh -o StrictHostKeyChecking=no "opc@${SERVER_IP}" "sudo -u sobok /opt/sobok/deploy.sh /tmp/sobok.tar.gz"
