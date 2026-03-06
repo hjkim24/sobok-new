@@ -34,6 +34,7 @@ jobs:
         with:
           terraform_version: "~1.5"
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+          terraform_wrapper: false
 
       - name: Get server IP from Terraform Cloud
         id: tf_output
