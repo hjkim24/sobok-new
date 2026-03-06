@@ -25,8 +25,9 @@ resource "oci_core_instance" "sobok" {
   metadata = {
     ssh_authorized_keys = var.ssh_public_key
     user_data           = base64encode(templatefile("${path.module}/cloud-init.yaml.tftpl", {
-      domain        = var.domain
-      certbot_email = var.certbot_email
+      domain            = var.domain
+      certbot_email     = var.certbot_email
+      betterstack_token = var.betterstack_token
     }))
   }
 

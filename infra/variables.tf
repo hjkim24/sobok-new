@@ -86,6 +86,12 @@ variable "aws_route53_zone_id" {
   type        = string
 }
 
+variable "betterstack_token" {
+  description = "BetterStack source token for log ingestion"
+  type        = string
+  sensitive   = true
+}
+
 locals {
   compartment_ocid = var.compartment_ocid != "" ? var.compartment_ocid : var.tenancy_ocid
 }

@@ -135,5 +135,27 @@ runcmd:
   - systemctl daemon-reload
   - systemctl enable sobok
 
+  # --- Vector (BetterStack log agent) ---
+  - curl -1sLf 'https://repositories.timber.io/public/vector/cfg/setup/bash.rpm.sh' | bash
+  - dnf install -y vector
+  - |
+    cat > /etc/vector/vector.toml << 'VECTOR'
+    [sources.journald]
+    type = "journald"
+    current_boot_only = false
+    units = ["sobok.service", "nginx.service"]
+
+    [sinks.betterstack]
+    type = "http"
+    inputs = ["journald"]
+    uri = "https://in.logs.betterstack.com"
+    encoding.codec = "json"
+
+    [sinks.betterstack.auth]
+    strategy = "bearer"
+    token = "${betterstack_token}"
+    VECTOR
+  - systemctl enable --now vector
+
   # --- SSL certificate (auto, DNS 전파 완료 전제) ---
   - /usr/local/bin/certbot --nginx -d ${domain} --non-interactive --agree-tos -m ${certbot_email}
