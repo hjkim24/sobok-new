@@ -1,98 +1,141 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Sobok API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+루틴 관리와 시간 저축을 통해 생산성을 향상시키는 앱의 백엔드 서버입니다.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 주요 기능
 
-## Description
+- **루틴 관리** — 루틴 생성, 반복 요일 설정, 일일 달성 추적
+- **적금 시스템** — 시간을 적금처럼 저축하고 이자를 받는 게임화 기능
+- **포인트 시스템** — 루틴 달성 시 포인트 적립 및 리워드
+- **통계 및 리포트** — 월별 사용자 리포트, 스노우 카드
+- **AI 루틴 추천** — OpenAI 기반 맞춤 루틴 추천
+- **소셜 로그인** — Google, Kakao, Apple OAuth
+- **SMS 인증** — CoolSMS 기반 휴대폰 번호 인증
+- **FCM 푸시 알림** — Firebase 기반 알림
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 기술 스택
 
-## Project setup
+| 분류 | 기술 |
+|------|------|
+| 프레임워크 | NestJS 11, TypeScript 5 |
+| 데이터베이스 | PostgreSQL (Supabase), Prisma ORM |
+| 캐시 | Redis 7 |
+| 인증 | JWT, Passport, OAuth2 |
+| 인프라 | Oracle Cloud (OCI), Terraform, GitHub Actions |
+| 외부 서비스 | Firebase FCM, OpenAI, CoolSMS |
+| 로그 | Vector + BetterStack |
 
-```bash
-$ npm install
-```
+## 시작하기
 
-## Compile and run the project
+### 사전 요구사항
 
-```bash
-# development
-$ npm run start
+- Node.js 22+
+- pnpm 10+
+- Docker (로컬 DB/Redis용)
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Run tests
+### 로컬 개발 환경 설정
 
 ```bash
-# unit tests
-$ npm run test
+# 의존성 설치
+pnpm install
 
-# e2e tests
-$ npm run test:e2e
+# DB & Redis 실행
+pnpm db:up
 
-# test coverage
-$ npm run test:cov
+# Prisma 클라이언트 생성
+pnpm prisma:generate
+
+# DB 마이그레이션
+pnpm prisma:migrate
+
+# 개발 서버 실행 (http://localhost:3000)
+pnpm start:dev
 ```
 
-## Deployment
+### API 문서
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+개발 서버 실행 후 Swagger UI에서 확인할 수 있습니다:
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+```
+http://localhost:3000/api/docs
+```
+
+## 환경 변수
+
+`.env` 파일을 프로젝트 루트에 생성하세요:
+
+```env
+# Database
+DATABASE_URL=postgresql://user:password@host:5432/sobok
+DIRECT_URL=postgresql://user:password@host:5432/sobok
+
+# JWT
+JWT_SECRET=your_jwt_secret
+JWT_ACCESS_EXPIRY=86400
+JWT_REFRESH_EXPIRY=2592000
+
+# OAuth
+APPLE_CLIENT_ID=com.your.app
+
+# Redis
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_PASSWORD=
+
+# CoolSMS
+COOLSMS_API_KEY=
+COOLSMS_API_SECRET=
+COOLSMS_FROM_NUMBER=
+
+# Firebase
+FIREBASE_SERVICE_ACCOUNT_PATH=secrets/firebase-admin-sdk.json
+
+# OpenAI
+OPENAI_API_KEY=
+```
+
+Firebase 서비스 계정 JSON 파일은 `secrets/firebase-admin-sdk.json`에 위치해야 합니다.
+
+## 배포
+
+`main` 브랜치에 푸시하면 GitHub Actions가 자동으로 OCI 서버에 배포합니다.
+
+수동 배포가 필요한 경우 GitHub Actions의 `workflow_dispatch`로 트리거할 수 있습니다.
+
+### 필요한 GitHub Secrets
+
+| Secret | 설명 |
+|--------|------|
+| `TF_API_TOKEN` | Terraform Cloud 토큰 |
+| `SSH_PRIVATE_KEY` | 서버 SSH 개인 키 |
+| `ENV_PRODUCTION` | 프로덕션 `.env` 파일 내용 |
+| `FIREBASE_SERVICE_ACCOUNT_JSON` | Firebase 서비스 계정 JSON |
+
+### 인프라 관리
+
+서버 인프라는 Terraform으로 관리됩니다:
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+cd infra
+terraform init
+terraform plan
+terraform apply
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## 프로젝트 구조
 
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+```
+src/
+├── account/        # 적금 계좌 관리
+├── auth/           # 인증 (JWT, OAuth)
+├── category/       # 카테고리
+├── member/         # 사용자 프로필, 포인트
+├── notification/   # FCM 푸시 알림
+├── routine/        # 루틴 CRUD 및 추적
+├── spare-time/     # 여유 시간 관리
+├── statistics/     # 리포트, 스노우 카드
+├── survey/         # 설문 및 AI 추천
+├── sms/            # SMS 인증
+├── prisma/         # DB 서비스
+└── common/         # 공통 유틸리티
+```
