@@ -103,7 +103,13 @@ resource "null_resource" "provision_env" {
 
   # Update local SSH config with new server IP
   provisioner "local-exec" {
-    command     = "grep -q '^Host sobok-api' \"${dirname(var.ssh_private_key_path)}/config\" && sed -i.bak 's/^\\( *Hostname\\) .*/\\1 ${oci_core_public_ip.sobok.ip_address}/' \"${dirname(var.ssh_private_key_path)}/config\" || true"
+    command     = <<-EOT
+      CONFIG=$(cygpath -u "${dirname(var.ssh_private_key_path)}" 2>/dev/null || echo "${dirname(var.ssh_private_key_path)}")/config
+      IP="${oci_core_public_ip.sobok.ip_address}"
+      if [ -f "$CONFIG" ]; then
+        sed -i.bak "s/^\( *HostName\) .*/\1 $IP/" "$CONFIG"
+      fi
+    EOT
     interpreter = ["bash", "-c"]
   }
 }
