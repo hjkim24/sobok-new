@@ -57,8 +57,9 @@ jobs:
 
           printf '%s' "$ENV_PRODUCTION" > .env.production
           scp -o StrictHostKeyChecking=no .env.production "opc@${SERVER_IP}:/tmp/.env"
+          scp -o StrictHostKeyChecking=no secrets/firebase-admin-sdk.json "opc@${SERVER_IP}:/tmp/firebase-admin-sdk.json"
           ssh -o StrictHostKeyChecking=no "opc@${SERVER_IP}" \
-            "sudo mv /tmp/.env /opt/sobok/.env && sudo chmod 600 /opt/sobok/.env && sudo chown sobok:sobok /opt/sobok/.env"
+            "sudo mv /tmp/.env /opt/sobok/.env && sudo chmod 600 /opt/sobok/.env && sudo chown sobok:sobok /opt/sobok/.env && sudo restorecon -v /opt/sobok/.env && sudo mv /tmp/firebase-admin-sdk.json /opt/sobok/firebase-admin-sdk.json && sudo chmod 600 /opt/sobok/firebase-admin-sdk.json && sudo chown sobok:sobok /opt/sobok/firebase-admin-sdk.json && sudo restorecon -v /opt/sobok/firebase-admin-sdk.json"
 
           scp -o StrictHostKeyChecking=no sobok.tar.gz "opc@${SERVER_IP}:/tmp/sobok.tar.gz"
           ssh -o StrictHostKeyChecking=no "opc@${SERVER_IP}" "sudo -u sobok /opt/sobok/deploy.sh /tmp/sobok.tar.gz"

@@ -80,15 +80,23 @@ resource "null_resource" "provision_env" {
     destination = "/tmp/.env"
   }
 
+  # Upload Firebase service account JSON to /tmp
+  provisioner "file" {
+    source      = "${path.module}/../secrets/firebase-admin-sdk.json"
+    destination = "/tmp/firebase-admin-sdk.json"
+  }
+
   # Move to correct location with proper permissions
   provisioner "remote-exec" {
     inline = [
       "sudo mkdir -p /opt/sobok",
       "sudo mv /tmp/.env /opt/sobok/.env",
       "sudo chmod 600 /opt/sobok/.env",
+      "sudo mv /tmp/firebase-admin-sdk.json /opt/sobok/firebase-admin-sdk.json",
+      "sudo chmod 600 /opt/sobok/firebase-admin-sdk.json",
       "# Wait for cloud-init to create the sobok user (up to 5 min)",
       "for i in $(seq 1 60); do id sobok &>/dev/null && break; sleep 5; done",
-      "sudo chown sobok:sobok /opt/sobok/.env",
+      "sudo chown sobok:sobok /opt/sobok/.env /opt/sobok/firebase-admin-sdk.json",
       "sudo restorecon -Rv /opt/sobok/",
     ]
   }
