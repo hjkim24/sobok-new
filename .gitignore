@@ -10,13 +10,15 @@ build/
 .env
 .env.local
 .env.*.local
-.env.production
 
 # IDE
 .idea/
 .vscode/
 *.swp
 *.swo
+
+# Claude
+.claude
 
 # OS
 .DS_Store

@@ -74,9 +74,9 @@ resource "null_resource" "provision_env" {
     timeout     = "5m"
   }
 
-  # Upload .env.production to /tmp
+  # Upload .env to /tmp
   provisioner "file" {
-    source      = "${path.module}/../.env.production"
+    source      = "${path.module}/../.env"
     destination = "/tmp/.env"
   }
 
@@ -91,5 +91,11 @@ resource "null_resource" "provision_env" {
       "sudo chown sobok:sobok /opt/sobok/.env",
       "sudo restorecon -Rv /opt/sobok/",
     ]
+  }
+
+  # Update local SSH config with new server IP
+  provisioner "local-exec" {
+    command     = "grep -q '^Host sobok-api' \"${dirname(var.ssh_private_key_path)}/config\" && sed -i.bak 's/^\\( *Hostname\\) .*/\\1 ${oci_core_public_ip.sobok.ip_address}/' \"${dirname(var.ssh_private_key_path)}/config\" || true"
+    interpreter = ["bash", "-c"]
   }
 }

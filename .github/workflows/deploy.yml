@@ -48,11 +48,17 @@ jobs:
       - name: Deploy to server
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          ENV_PRODUCTION: ${{ secrets.ENV_PRODUCTION }}
           SERVER_IP: ${{ steps.tf_output.outputs.server_ip }}
         run: |
           mkdir -p ~/.ssh
           printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
+
+          printf '%s' "$ENV_PRODUCTION" > .env.production
+          scp -o StrictHostKeyChecking=no .env.production "opc@${SERVER_IP}:/tmp/.env"
+          ssh -o StrictHostKeyChecking=no "opc@${SERVER_IP}" \
+            "sudo mv /tmp/.env /opt/sobok/.env && sudo chmod 600 /opt/sobok/.env && sudo chown sobok:sobok /opt/sobok/.env"
 
           scp -o StrictHostKeyChecking=no sobok.tar.gz "opc@${SERVER_IP}:/tmp/sobok.tar.gz"
           ssh -o StrictHostKeyChecking=no "opc@${SERVER_IP}" "sudo -u sobok /opt/sobok/deploy.sh /tmp/sobok.tar.gz"
