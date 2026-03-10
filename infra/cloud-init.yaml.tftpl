@@ -74,6 +74,7 @@ runcmd:
     User=sobok
     Group=sobok
     WorkingDirectory=/opt/sobok/current
+    Environment=NODE_ENV=production
     EnvironmentFile=-/opt/sobok/.env
     ExecStart=/usr/bin/node dist/main
     Restart=always
